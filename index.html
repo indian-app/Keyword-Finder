@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <!-- Importent SEO Tag  -->
+    <title>Keyword Finder - The Best keyword finder Tool.</title>
+    <meta name="keywords" content="keyword finder for youtube,keyword finder tools,keyword finder extension,keyword finder for amazon,keyword finder for free,keyword finder from website,keyword finder tool google,keyword finder free tool,keyword finder for blogger,keyword finder for resume" />
+    <meta name="description" content="Keyword Finder tool gives you best Keywords for your work because Keyword Finder have a great algorithms for finding keywords. So why are waiting use Keyword Finder right now." />
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="url" content="http://atoolstower.com/keyword-finder/">
+    <meta name="robots" content "index, follow">
+    <meta name="twitter:card" content="Keyword Finder tool gives you best Keywords for your work because Keyword Finder have a great algorithms for finding keywords. So why are waiting use Keyword Finder right now." />
+    </meta>
+    <meta name="og:title" content="Keyword Finder - The Best keyword finder Tool." />
+    <meta name="og:description" content="Keyword Finder tool gives you best Keywords for your work because Keyword Finder have a great algorithms for finding keywords. So why are waiting use Keyword Finder right now." />
+    <meta name="og:url" content="http://atoolstower.com/keyword-finder/" />
+    <link rel="canonical" href="http://atoolstower.com/keyword-finder/" />
+    <!-- Importent SEO Tag  -->
+    <!-- Link Files  -->
+    <link rel="shortcut icon" type="image" href="keyword-finder.png" />
+    <link rel="stylesheet" type="text/css" href="animation.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Fredoka+One|Rubik&display=swap" rel="stylesheet">
+    <!-- Link Files  -->
+</head>
+
+<body>
+    <center>
+        <div class="header">
+            <div class="logo">
+                <img src="keyword-finder.png" alt="Keyword Finder">
+            </div>
+            <h1>Keyword Finder</h1>
+        </div>
+    </center>
+    <br>
+    <div class="totalarea">
+        <div class="display_area">
+            <div class="main_area">
+                <div id="numofkeywords">Total Keyword that have is : 0</div>
+                <textarea placeholder="Enter your main keyword or Topic." class="main_input" id="input" style="height: 400px; width: 90%"></textarea>
+                <input class="start_butt" id="startjob" onclick="StartJob();" type="button" value="Start Keyword Finder">
+                <br>
+                <a style="color: #565656; padding: 10px;" id="show_advance_option">Show Advance Option</a>
+                <a style="color: #565656; padding: 10px;" id="hide_advance_option" class="hidebuttajex">Hide Advance Option</a>
+                <div id="container"> </div>
+                <!--  For debugging -->
+                <textarea id="queryoutput" style="display:none;"></textarea>
+            </div>
+            <div id="advance_option" class="more_option_area">
+                <textarea id="filter-positive" style=" width: 44%; margin-right: 1%; " rows="4" onkeyup="FilterIfNotWorking()" placeholder="Enter any word that you want in your Keyword's ( Positive Filte )"></textarea>
+                <textarea id="filter-negative" style=" width: 44%; margin-left: 1%; " rows="4" onkeyup="FilterIfNotWorking()" placeholder="Enter any word that you don't want in your Keyword's ( Negative Filte )"></textarea>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#advance_option").hide();
+                    $("#show_advance_option").click(function() {
+                        $("#advance_option").show();
+                        $("#show_advance_option").addClass("hidebuttajex");
+                        $("#hide_advance_option").addClass("hgjhvhgvhvh").removeClass("hidebuttajex");
+                    });
+                    $("#hide_advance_option").click(function() {
+                        $("#advance_option").hide();
+                        $("#show_advance_option").addClass("hgjhvhgvhvh").removeClass("hidebuttajex");
+                        $("#hide_advance_option").addClass("hidebuttajex").removeClass("hgjhvhgvhvh");
+                    })
+                });
+            </script>
+        </div>
+        <div class="row">
+            <!-- Importent -->
+            <div id="spinner"></div>
+        </div>
+        <script src="jQuery.js"></script>
+        <script type="text/javascript">
+            var keywordsToDisplay = new Array();
+            var hashMapResults = {};
+            var numOfInitialKeywords = 0;
+            var doWork = false;
+            var keywordsToQuery = new Array();
+            var keywordsToQueryIndex = 0;
+            var queryflag = false;
+
+            window.setInterval(DoJob, 750);
+
+            function StartJob() {
+                if (doWork == false) {
+                    keywordsToDisplay = new Array();
+                    hashMapResults = {};
+                    keywordsToQuery = new Array();
+                    keywordsToQueryIndex = 0;
+                    setCookie('kws', '', 30)
+
+                    hashMapResults[""] = 1;
+                    hashMapResults[" "] = 1;
+                    hashMapResults["  "] = 1;
+
+                    var ks = $('#input').val().split("\n");
+                    var i = 0;
+                    for (i = 0; i < ks.length; i++) {
+                        keywordsToQuery[keywordsToQuery.length] = ks[i];
+                        SaveLatest(ks[i]);
+
+                        var j = 0;
+                        for (j = 0; j < 26; j++) {
+                            var chr = String.fromCharCode(97 + j);
+                            var currentx = ks[i] + ' ' + chr;
+                            keywordsToQuery[keywordsToQuery.length] = currentx;
+                            hashMapResults[currentx] = 1;
+                        }
+                    }
+                    //document.getElementById("input").value = '';
+                    //document.getElementById("input").value += "\n";
+                    numOfInitialKeywords = keywordsToDisplay.length;
+                    FilterAndDisplay();
+
+                    doWork = true;
+                    $('#startjob').val('Stop Keyword Finder');
+                } else {
+                    doWork = false;
+                    $('#startjob').val('Start Keyword Finder');
+                }
+            }
+
+            function DoJob() {
+                if (doWork == true && queryflag == false) {
+                    if (keywordsToQueryIndex < keywordsToQuery.length) {
+                        var currentKw = keywordsToQuery[keywordsToQueryIndex];
+                        QueryKeyword(currentKw);
+                        keywordsToQueryIndex++;
+                    } else {
+                        if (numOfInitialKeywords != keywordsToDisplay.length) {
+                            alert("Done");
+                            doWork = false;
+                            $('#startjob').val('Start Job');
+                        } else {
+                            keywordsToQueryIndex = 0;
+                        }
+                    }
+                }
+            }
+
+            function QueryKeyword(keyword) {
+                var querykeyword = keyword;
+                //var querykeyword = encodeURIComponent(keyword);
+                var queryresult = '';
+                queryflag = true;
+
+
+
+                $.ajax({
+                    url: window.location.protocol + "//suggestqueries.google.com/complete/search",
+                    jsonp: "jsonp",
+                    dataType: "jsonp",
+                    data: {
+                        q: querykeyword,
+                        client: "chrome"
+                    },
+                    success: function(res) {
+                        var retList = res[1];
+
+                        var i = 0;
+                        for (i = 0; i < retList.length; i++) {
+                            var currents = CleanVal(retList[i]);
+                            if (hashMapResults[currents] != 1) {
+                                hashMapResults[currents] = 1;
+                                SaveLatest(CleanVal(retList[i]));
+
+                                keywordsToQuery[keywordsToQuery.length] = currents;
+
+                                var j = 0;
+                                for (j = 0; j < 26; j++) {
+                                    var chr = String.fromCharCode(97 + j);
+                                    var currentx = currents + ' ' + chr;
+                                    keywordsToQuery[keywordsToQuery.length] = currentx;
+                                    hashMapResults[currentx] = 1;
+                                }
+                            }
+                        }
+                        FilterAndDisplay();
+                        var textarea = document.getElementById("input");
+                        textarea.scrollTop = textarea.scrollHeight;
+                        queryflag = false;
+                    }
+                });
+            }
+
+            function CleanVal(input) {
+                var val = input;
+                val = val.replace("\\u003cb\\u003e", "");
+                val = val.replace("\\u003c\\/b\\u003e", "");
+                val = val.replace("\\u003c\\/b\\u003e", "");
+                val = val.replace("\\u003cb\\u003e", "");
+                val = val.replace("\\u003c\\/b\\u003e", "");
+                val = val.replace("\\u003cb\\u003e", "");
+                val = val.replace("\\u003cb\\u003e", "");
+                val = val.replace("\\u003c\\/b\\u003e", "");
+                val = val.replace("\\u0026amp;", "&");
+                val = val.replace("\\u003cb\\u003e", "");
+                val = val.replace("\\u0026", "");
+                val = val.replace("\\u0026#39;", "'");
+                val = val.replace("#39;", "'");
+                val = val.replace("\\u003c\\/b\\u003e", "");
+                val = val.replace("\\u2013", "2013");
+                if (val.length > 4 && val.substring(0, 4) == "http") val = "";
+                return val;
+            }
+
+            function Filter(listToFilter) {
+                var retList = listToFilter;
+
+                if (document.getElementById("filter-positive").value.length > 0) {
+                    var filteredList = new Array();
+                    var filterContains = document.getElementById("filter-positive").value.split("\n");
+                    var i = 0;
+                    for (i = 0; i < retList.length; i++) {
+                        var currentKeyword = retList[i];
+                        var boolContainsKeyword = false;
+                        var j = 0;
+                        for (j = 0; j < filterContains.length; j++) {
+                            if (filterContains[j].length > 0) {
+                                if (currentKeyword.indexOf(filterContains[j]) != -1) {
+                                    boolContainsKeyword = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (boolContainsKeyword) {
+                            filteredList[filteredList.length] = currentKeyword;
+                        }
+                    }
+
+                    retList = filteredList;
+                }
+
+                if (document.getElementById("filter-negative").value.length > 0) {
+                    var filteredList = new Array();
+                    var filterContains = document.getElementById("filter-negative").value.split("\n");
+                    var i = 0;
+                    for (i = 0; i < retList.length; i++) {
+                        var currentKeyword = retList[i];
+                        var boolCleanKeyword = true;
+                        var j = 0;
+                        for (j = 0; j < filterContains.length; j++) {
+                            if (filterContains[j].length > 0) {
+                                if (currentKeyword.indexOf(filterContains[j]) >= 0) {
+                                    boolCleanKeyword = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (boolCleanKeyword) {
+                            filteredList[filteredList.length] = currentKeyword;
+                        }
+                    }
+
+                    retList = filteredList;
+                }
+
+                return retList;
+            }
+
+            function FilterAndDisplay() {
+                var i = 0;
+                var sb = '';
+                var outputKeywords = Filter(keywordsToDisplay);
+                for (i = 0; i < outputKeywords.length; i++) {
+                    sb += outputKeywords[i];
+                    sb += '\n';
+                }
+                document.getElementById("input").value = sb;
+                document.getElementById("numofkeywords").innerHTML = '' + 'Total Keyword that have is' + ' : ' + keywordsToDisplay.length;
+                document.getElementById("spinner").innerHTML = '' + '<img src="spinner" />';
+            }
+
+            function SaveLatest(kw) {
+                var kws = getCookie('kws');
+                kws += kw + '\\n';
+                keywordsToDisplay[keywordsToDisplay.length] = kw;
+                setCookie('kws', kws, 30)
+            }
+
+            function setCookie(cname, cvalue, exdays) {
+                var d = new Date();
+                d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                var expires = "expires=" + d.toUTCString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            }
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+
+            function post_to_url(path, params, method) {
+                method = method || "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", path);
+
+                for (var key in params) {
+                    if (params.hasOwnProperty(key)) {
+                        var hiddenField = document.createElement("input");
+                        hiddenField.setAttribute("type", "hidden");
+                        hiddenField.setAttribute("name", key);
+                        hiddenField.setAttribute("value", params[key]);
+
+                        form.appendChild(hiddenField);
+                    }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
+    </div>
+    <center>
+        <h2>Feature of Keyword Finder</h2><br>
+        <div style="display:inline;" class="function">
+            <div class="section1" style="display:inline-block;">
+                <div class="feature1" style="box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); background:#fff; padding:10px; margin:10px; border-radius:15px;">
+                    <h3>Keyword Finder is very Easy-to-use.</h3>
+                    <p>Keyword Finder is very easy-to-use tool. In Keyword Finder have a box there you can enter your main keyword and It have a submit button "START KEYWORD FINDER".</p>
+                </div>
+                <div class="feature2" style="box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); background:#fff; padding:10px; margin:10px; border-radius:15px;">
+                    <h3>It have ONE-CLICK-FUNCTIONALITY.</h3>
+                    <p>Keyword Finder is need only one click for Finding your keywords. Its One-page application based on Javascrict.</p>
+                </div>
+            </div>
+            <div class="section2" style="display:inline-block;">
+                <div class="feature3" style="box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); background:#fff; padding:10px; margin:10px; border-radius:15px;">
+                    <h3>Keyword Finder is fast as fast.</h3>
+                    <p>Keyword Finder is fast-as-fast because its don't have much more Page element and its Hosted in Indian server.</p>
+                </div>
+                <div class="feature4" style="box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); background:#fff; padding:10px; margin:10px; border-radius:15px;">
+                    <h3>Keyword Finder is totaly FREE.</h3>
+                    <p>Keyword Finder is 100% FREE to personal or commercial use. You don't need pay anything. for using it.</p>
+                </div>
+            </div>
+        </div>
+        <br><br>
+    </center>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
