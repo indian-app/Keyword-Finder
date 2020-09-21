@@ -1,0 +1,98 @@
+.header{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.header > div , h1 {
+    padding: 10px;
+}
+
+.header > .logo > img {
+    width: 50px;
+    height: 50px;
+}
+
+.totalarea .main_area {
+    text-align: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.totalarea .main_area .start_butt {
+    width: auto;
+    height: auto;
+    border-radius: 30px;
+    padding: 10px 35px;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    background: linear-gradient(90deg, #f72407, #FCA435, #FFB03D, #f72407);
+    background-size: 400%;
+    margin: 10px;
+    transition: 0.8s;
+    outline: none;
+    border: 0px solid #fff;
+}
+
+.totalarea .main_area .start_butt:hover {
+    box-shadow: 0 3px 7px rgba(87, 87, 87, 0.596);
+}
+
+.totalarea .main_area .main_input {
+    border-radius: 10px;
+    transition: 0.3s;
+    padding: 15px;
+    outline: 0;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.totalarea .main_area .main_input:hover {
+    box-shadow: 0 5px 12px rgb(0, 0, 0, 0.2);
+}
+
+.totalarea .more_option_area {
+    text-align: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.totalarea .more_option_area textarea {
+    border-radius: 10px;
+    transition: 0.3s;
+    padding: 15px;
+    outline: 0;
+}
+
+.totalarea .more_option_area textarea:hover {
+    box-shadow: 0 2px 5px rgb(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.hidebuttajex {
+    display: none;
+}
+
+.function .section1 {
+    width: 40%;
+}
+
+.function .section2 {
+    width: 40%;
+}
+
+@media (max-width:800px) {
+    .function .section1 {
+        width: 80%;
+    }
+    .function .section2 {
+        width: 80%;
+    }
+}
